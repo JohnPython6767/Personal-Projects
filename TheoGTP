@@ -1,0 +1,109 @@
+###TheoGTP###
+
+import random
+import time
+
+number_of_conversations = 0
+
+
+# moods
+
+#Greetings
+
+startled_greeting = ["HUH" , "Excuse me young lady?" , "AHDFGHD DGFHDGFHAFHEVBAV EHHDAYG"]
+regular_greeting = ["Hello" , "Yes?" , "Hold on ... yeah?"]
+angry_greeting = ["no","shut up"]
+idle = ["HEHEHEHA","Screw you","ALLLLLLLrigh then","My arrows are very effective charlie" , "What in the even?" , "Ask EmeryGTP","hehe 9/11"]
+
+
+
+def conversation(startled):
+    global startled_greeting , regular_greeting , angry_greeting
+    greeting = False
+    while True:
+        response = False
+        user_input = input(">>")
+
+        if startled == True and greeting != True and "hi" not in user_input.lower() :
+            x = random.randint(0,(len(startled_greeting)-1))
+            print(f"Theo>>{startled_greeting[x]}")
+            greeting = True
+            response = True
+        elif greeting != True:
+            x = random.randint(0,(len(regular_greeting)-1))
+            print(f"Theo>> {regular_greeting[x]}")
+            greeting = True
+            response = True
+        
+        elif "goodbye" in user_input.lower():
+            print("Bye")
+            break
+
+        
+        if "leave" in user_input.lower() or "exit" in user_input.lower():
+            print("Theo>> Well you have to say goodbye, obviously")
+            print("Theo>> Would be rude not to")
+            response = True
+
+        if "67" in user_input:
+            break
+
+        if user_input == "":
+            x = random.randint(0,(len(idle)-1))
+            print(f"Theo>> {idle[x]}")
+            response = True
+        
+        if "how are you" in user_input.lower():
+            print("Theo>> Im fiinee")
+        
+        if response == False:
+            print("Thats beyond my capabilities at the moment")
+        
+
+
+        
+
+def patches_and_rules():
+    print("Current version: 1.3")
+
+    print("####################")
+    print("Rules:")
+    print("To end coversation say goodbye")
+    print("")
+
+    print("####################")
+    print("Version Notes")
+    print("More idle responses")
+    print("Bug Fix - likes to say things are beyond capabilities after a response sometimes")
+    print("more basic conversation capabilities")
+
+
+def sys_loop():
+    global number_of_conversations
+    number_of_conversations = number_of_conversations + 1
+    if number_of_conversations <= 3:
+        startled = True
+    else:
+        startled = False
+
+    while True:
+        print("# 1. Start conversation")
+        print("# 2. View version Logs")
+
+        x = input()
+
+        try:
+            int(x)
+        except:
+            print("error")
+        else:
+            break
+
+    if x == "1":
+        conversation(startled)
+    if x == "2":
+        patches_and_rules()
+
+
+while True:
+    sys_loop()
