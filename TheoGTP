@@ -58,7 +58,10 @@ def conversation(startled):
         if "how are you" in user_input.lower():
             print("Theo>> Im fiinee")
             response = True
-        
+
+        if len(user_input) >100:
+            print("HUBBABBUBABHBAHHBHABBUUUBAUH")
+            
         if response == False:
             print("Thats beyond my capabilities at the moment")
         
