@@ -18,12 +18,13 @@ idle = ["HEHEHEHA","Screw you","ALLLLLLLrigh then","My arrows are very effective
 
 
 def conversation(startled):
-    global startled_greeting , regular_greeting , angry_greeting
     greeting = False
     while True:
         response = False
         user_input = input(">>")
 
+       
+        # greeting
         if startled == True and greeting != True and "hi" not in user_input.lower() :
             x = random.randint(0,(len(startled_greeting)-1))
             print(f"Theo>>{startled_greeting[x]}")
@@ -35,6 +36,7 @@ def conversation(startled):
             greeting = True
             response = True
         
+        #goodbye
         elif "goodbye" in user_input.lower():
             print("Bye")
             break
@@ -46,7 +48,7 @@ def conversation(startled):
             response = True
 
         if "67" in user_input:
-            break
+            print(f"Theo>> Shut up")
 
         if user_input == "":
             x = random.randint(0,(len(idle)-1))
@@ -55,6 +57,7 @@ def conversation(startled):
         
         if "how are you" in user_input.lower():
             print("Theo>> Im fiinee")
+            response = True
         
         if response == False:
             print("Thats beyond my capabilities at the moment")
@@ -76,6 +79,7 @@ def patches_and_rules():
     print("More idle responses")
     print("Bug Fix - likes to say things are beyond capabilities after a response sometimes")
     print("more basic conversation capabilities")
+    print("More responses")
 
 
 def sys_loop():
