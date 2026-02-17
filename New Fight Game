@@ -1,0 +1,21 @@
+## New Fight Game
+
+# Imports:
+import random , time 
+from inputimeout import inputimeout 
+
+
+# Player variables
+
+Level = 0
+
+xp = 0
+gold = 0
+
+Health = 100
+Defense = 50
+
+Luck = 5
+
+# enemy variables
+enemy_type = ["Brute" , "Soldier" , "Warlock"]
