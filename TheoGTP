@@ -2,102 +2,205 @@
 
 import random
 import time
+from inputimeout import inputimeout 
+import ctypes
+import webbrowser
 
-number_of_conversations = 0
-
+number_of_conversations = -1
+EvilTheo = False
 
 # moods
-
+list_of_moods = ["Happy" , "Neutral" , "Confused" , "Angry" , "Sad", "Freaky" , "Cheesy"]
+current_mood = "Neutral"
 #Greetings
-
-startled_greeting = ["HUH" , "Excuse me young lady?" , "AHDFGHD DGFHDGFHAFHEVBAV EHHDAYG"]
+acceptable_greetings = ["Hi", "Hello", "Hey"]
+startled_greeting = ["HUH" , "Excuse me young lady?" , "AHDFGHD DGFHDGFHAFHEVBAV EHHDAYG", "*gasps"]
 regular_greeting = ["Hello" , "Yes?" , "Hold on ... yeah?"]
 angry_greeting = ["no","shut up"]
-idle = ["HEHEHEHA","Screw you","ALLLLLLLrigh then","My arrows are very effective charlie" , "What in the even?" , "Ask EmeryGTP","hehe 9/11"]
+idle = ["HEHEHEHA","Screw you","ALLLLLLLrigh then","My arrows are very effective charlie" , "What in the even?" , "Ask EmeryGTP","hehe 9/11" , "https://thangs.com/designer/Chrismaster/3d-model/Heheheha%20Clash%20Royale%20King%20Emote-588352?srsltid=AfmBOopMNmjGW_PTQXdRa5nhJe0ejZMzs_ZFtI2bNgcMj1g0xMr9KRGk"
+        , "Yours sincerely, TheoGTP" , "I dunno" , "ooooohhhhhhhhhh" , "Monkeys" , "Brutaly rate" , "epstein" , "Osi Model" , "Haaaaa" , "oh no, Fraser Charlie" , "ummm" , "Kidnap" , "I dont like that one" , "I like it, Fraser Charlie, I like it"]
+
+# Theo Files
+
+Theo_Files = ["https://mbro-my.sharepoint.com/:i:/g/personal/m2501954_middlesbro_ac_uk/IQCR1CA1Gl1FSrWQzCycIgtyAY4G8-otdsVx_0zOduNVT-s?e=7pgJ7c",
+              "https://mbro-my.sharepoint.com/:i:/g/personal/m2501954_middlesbro_ac_uk/IQCE4La13RxPSbuMtXGE1WViAaocTWgGjNokWaep06g_J2I?e=dzcEtH",
+              "https://mbro-my.sharepoint.com/:i:/g/personal/m2501954_middlesbro_ac_uk/IQAxfCT0nhQaTKynpK66m_0dAeA4W4Xqj2XqbRAb33-Z_J0?e=eH5hQn",
+              "https://mbro-my.sharepoint.com/:i:/g/personal/m2501954_middlesbro_ac_uk/IQAEH6p98O9pRqZvBbTOX1KDATHmPf5vRlO_AB4B9Bj1w1A?e=50LzOb",
+              "https://mbro-my.sharepoint.com/:i:/g/personal/m2501954_middlesbro_ac_uk/IQAx43aqX104SbY5k_9wv-SHAWGe6kSPaysSQXgH7g3XcyY?e=Fibfml",
+              "https://mbro-my.sharepoint.com/:i:/g/personal/m2501954_middlesbro_ac_uk/IQDVd0viNobSRrirYnW1i8J0AQh850PkaDHVMD7jgRj7mmM?e=SdiSMw",
+              "https://mbro-my.sharepoint.com/:i:/g/personal/m2501954_middlesbro_ac_uk/IQDZNIEH1BWhS7RkDAQHOb0FAWLp0tFaycKU7DgGBM3Jq2A?e=wn724y",
+              "https://mbro-my.sharepoint.com/:i:/g/personal/m2501954_middlesbro_ac_uk/IQD-Me-HxLloQLUDbLp9RM_DAbpBF7TVsKB88JlvrwyJ87Q?e=jdk0je",
+              "https://mbro-my.sharepoint.com/:i:/g/personal/m2501954_middlesbro_ac_uk/IQDCdAerpUWORrSHGuymsi1tAQ1R4fC45ac-D0SJIFF0Ck0?e=JwYPM3",
+              "https://mbro-my.sharepoint.com/:i:/g/personal/m2501954_middlesbro_ac_uk/IQAQ_mqhXDNiRZYboaoePKS8AdiY9zWgWxLuOdeoE_yauuU?e=RiPAIJ",
+              "https://mbro-my.sharepoint.com/:i:/g/personal/m2501954_middlesbro_ac_uk/IQBOaPt4Cag1QK0AhkiDIgJ8AW4xE5uj4dtC4kJcSoj9fVM?e=xhwqN5",
+              "https://mbro-my.sharepoint.com/:i:/g/personal/m2501954_middlesbro_ac_uk/IQDVEv3Pqu0nTrsy1nu56le6Af65pT_4smnIPb8BAeZuYZQ?e=QIgrgY",
+              "https://mbro-my.sharepoint.com/:i:/g/personal/m2501954_middlesbro_ac_uk/IQAD97hhTOI6SaZU_wjrekz3ASlsI9usvg171NK58hkln1c?e=nFhJH5",
+              "https://mbro-my.sharepoint.com/:i:/g/personal/m2501954_middlesbro_ac_uk/IQBujp__N7F4Rqz3k3aCeK-rAbIkNM6fNDtclICuZT_D3nk?e=Ld8GSJ"
+              ]
+
+registered_insults = ["idiot" , "dingbat" , "fat" , "poopy head" , "bufoon" , "scallywag" , "ne'erdowell" , "monkey"]
 
 
-
-def conversation(startled):
+def conversation(startled,current_mood,EvilTheo):
     greeting = False
-    while True:
+    leave = False
+    while leave == False:
         response = False
-        user_input = input(">>")
+        
 
-       
-        # greeting
-        if startled == True and greeting != True and "hi" not in user_input.lower() :
-            x = random.randint(0,(len(startled_greeting)-1))
-            print(f"Theo>>{startled_greeting[x]}")
-            greeting = True
+        try:
+            user_input = inputimeout( prompt = ">>" , timeout = 15)
+        
+        except:
+            x = random.randint(0,(len(idle)-1))
+            if idle[x] == "https://thangs.com/designer/Chrismaster/3d-model/Heheheha%20Clash%20Royale%20King%20Emote-588352?srsltid=AfmBOopMNmjGW_PTQXdRa5nhJe0ejZMzs_ZFtI2bNgcMj1g0xMr9KRGk":
+                webbrowser.open(idle[x])
+            else:
+                print(f"Theo>> {idle[x]}")
             response = True
-        elif greeting != True:
-            x = random.randint(0,(len(regular_greeting)-1))
-            print(f"Theo>> {regular_greeting[x]}")
-            greeting = True
-            response = True
+        else:
+         # greeting
+
+            if startled == True and greeting != True and user_input.lower() not in acceptable_greetings :
+                x = random.randint(0,(len(startled_greeting)-1))
+                print(f"Theo>>{startled_greeting[x]}")
+                greeting = True
+                response = True
+            elif greeting != True and current_mood == "Angry":
+                x = random.randint(0,(len(angry_greeting)-1))
+                print(f"Theo>> {angry_greeting[x]}")
+                greeting = True
+                response = True
+            elif user_input.lower() in acceptable_greetings :
+                x = random.randint(0,(len(regular_greeting)-1))
+                print(f"Theo>> {regular_greeting[x]}")
+                greeting = True
+                response = True
         
         #goodbye
-        elif "goodbye" in user_input.lower():
-            print("Bye")
-            break
+            elif "goodbye" in user_input.lower():
+                print("Bye")
+                leave = True
+
+            if len(user_input) > 100:
+                print("HUBBABBUBABHBAHHBHABBUUUBAUH")
 
         
-        if "leave" in user_input.lower() or "exit" in user_input.lower():
-            print("Theo>> Well you have to say goodbye, obviously")
-            print("Theo>> Would be rude not to")
-            response = True
+            if "leave" in user_input.lower() or "exit" in user_input.lower():
+                print("Theo>> Well you have to say goodbye, obviously")
+                print("Theo>> Would be rude not to")
+                response = True
 
-        if "67" in user_input:
-            print(f"Theo>> Shut up")
+            if "67" in user_input:
+                print(f"Theo>> Shut up")
+                current_mood = "Angry"
+                leave = True
+                response = True
 
-        if user_input == "":
-            x = random.randint(0,(len(idle)-1))
-            print(f"Theo>> {idle[x]}")
-            response = True
         
-        if "how are you" in user_input.lower():
-            print("Theo>> Im fiinee")
-            response = True
+        
+            if "how are you" in user_input.lower():
+                print("Theo>> Im fiinee")
+                print("Theo>> How are you?")
+                response = True
 
-        if len(user_input) >100:
-            print("HUBBABBUBABHBAHHBHABBUUUBAUH")
+            if "good" in user_input.lower():
+                print("Theo>> Ok")
+                print("Theo>> What else do you want")
+                response = True
+
+            if "jojo" in user_input.lower() or "dmc"  in user_input.lower():
+                print(f"Theo>> What the hell is {user_input}")
+                response = True
+
+            if "epstein" in user_input.lower() or "the files" in user_input.lower():
+                ctypes.windll.user32.MessageBoxW(0, "I am not in the files :)", "IMPORTANT NOTICE", 1)
+                response = True
+
+
+            if "i want to speak to evil theo" in user_input.lower():
+                print("Theo>>")
+                EvilTheo = True
+                current_mood = "Angry"
+                leave = True
+                response = True
             
-        if response == False:
-            print("Thats beyond my capabilities at the moment")
+            if "sorry" in user_input.lower():
+                print("Theo>> Ok, you are forgiven")
+                current_mood = "Neutral"
+                response = True
+            
+            if "scary dog" in user_input.lower():
+                response = True
+                webbrowser.open("https://mbro-my.sharepoint.com/:i:/g/personal/m2501954_middlesbro_ac_uk/IQCfGMGXxmFJR4PEI1LuFXgZAT-bBay4-5-PQMgQ1tFk3qg?e=TMQxwa")
+
+            if "mood" in user_input.lower():
+                print(f"Theo>> I am feeling {current_mood}")
+                response = True
+            
+            if "cheese" in user_input.lower():
+                print("Theo>> MMMMMMM cheese")
+                response = True
+            
+            if user_input.lower() in registered_insults:
+                x = random.randint(0,(len(Theo_Files)-1))
+                webbrowser.open(Theo_Files[x])
+                print("Theo>> Right.")
+                response = True
+            
+            if response == False:
+                print("Thats beyond my capabilities at the moment")
+                current_mood = "confused"
+
+    return current_mood, EvilTheo
         
 
+
+def Evil_Theo(EvilTheo):
+    print("Evil Theo>> ")
+    EvilTheo = False
+    return EvilTheo
 
         
 
 def patches_and_rules():
-    print("Current version: 1.3")
+    print("Current version: 1.5")
 
-    print("####################")
+    print("#" * 30)
     print("Rules:")
     print("To end coversation say goodbye")
     print("")
 
-    print("####################")
+    print("#" * 30)
     print("Version Notes")
-    print("More idle responses")
-    print("Bug Fix - likes to say things are beyond capabilities after a response sometimes")
-    print("more basic conversation capabilities")
-    print("More responses")
+    print("Reacts when insulted")
+    print("More Idle Voice lines")
+    print("")
+    print("")
 
 
 def sys_loop():
-    global number_of_conversations
+    global number_of_conversations, current_mood, EvilTheo
     number_of_conversations = number_of_conversations + 1
     if number_of_conversations <= 3:
         startled = True
     else:
         startled = False
+    
+
+    print("#" * 30)
+    print("##### Welcome to TheoGTP #####")
+    print("#" * 30)
+
+    print(f"Number of Conversations: {number_of_conversations}")
+    print(f"Current mood: {current_mood}")
+    print("#" * 30)
 
     while True:
-        print("# 1. Start conversation")
-        print("# 2. View version Logs")
+        print("## 1. Start conversation")
+        print("## 2. View version Logs")
 
-        x = input()
+        x = input("")
 
         try:
             int(x)
@@ -106,10 +209,15 @@ def sys_loop():
         else:
             break
 
-    if x == "1":
-        conversation(startled)
+    if x == "1" and EvilTheo == False:
+        current_mood, EvilTheo = conversation(startled,current_mood,EvilTheo)
+    if x == "1" and EvilTheo == True:
+        EvilTheo = Evil_Theo(EvilTheo)
     if x == "2":
         patches_and_rules()
+    if x == "3":
+        print("GXKN VJGQ>>")
+    
 
 
 while True:
